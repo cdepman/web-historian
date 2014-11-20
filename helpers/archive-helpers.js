@@ -55,6 +55,7 @@ exports.downloadUrls = function(url){
       result += chunk;
     })
     res.on('end', function() {
+      console.log('done writing');
       fs.writeFile(exports.paths.archivedSites + '/' + url,result);
     });
   });

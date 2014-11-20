@@ -13,7 +13,7 @@ var headers = {
 };
 
 exports.handleRequest = function (req, res) {
-  var pathName = url.parse(req.url).pathname
+  var pathName = url.parse(req.url).pathname;
   var method = req.method;
 
   var serveSiteAssets = {
@@ -36,7 +36,7 @@ exports.handleRequest = function (req, res) {
   var serveArchivedSites = {
     GET: function() {
       res.writeHead(200, headers);
-      fs.readFile(archive.paths.archivedSites + pathName ,function(err,data) {
+      fs.readFile(archive.paths.archivedSites + '/' + pathName ,function(err,data) {
         if (err) {
           serveArchivedSites['POST']();
         }
@@ -44,7 +44,7 @@ exports.handleRequest = function (req, res) {
       });
     },
     POST: function() {
-      console.log(req.body);
+      console.log("REQ BODY:",req.body);
       archive.addUrlToList(pathName);
       res.writeHead(302, {
         'Location': '../loading.html'
@@ -60,8 +60,8 @@ exports.handleRequest = function (req, res) {
     '/index.html' : serveSiteAssets,
     '/archives' : serveArchivedSites
   }
-  console.log(pathName.slice(0,3));
   if (pathName.slice(1,4)==='www' || pathName.slice(1,5)==='http' ){
+    pathName = pathName.slice(1);
     routes['/archives'][method]();
   } else if (routes[pathName] && pathName !== '/favicon.ico'){
     routes[pathName][method]();

@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var http = require('http')
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -26,16 +27,35 @@ exports.initialize = function(pathsObj){
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(){
+  var data = fs.readFileSync(exports.paths.list);
+  return data.toString().split('\n').slice(0,-1);
 };
 
-exports.isUrlInList = function(){
+exports.isUrlInList = function(url){
+  return (_.contains(exports.readListOfUrls(),url));
 };
 
-exports.addUrlToList = function(){
+exports.addUrlToList = function(url){
+  if (!exports.isUrlInList(url)) {
+    fs.appendFile(exports.paths.list,url + '\n',function(err) {
+      if (err) { return err; }
+      console.log(exports.isUrlInList(url));
+    });
+  }
 };
 
-exports.isURLArchived = function(){
+exports.isURLArchived = function(url,callback){
+  fs.exists(exports.paths.archivedSites + '/' + url, callback);
 };
 
-exports.downloadUrls = function(){
+exports.downloadUrls = function(url){
+  var result = '';
+  http.get('http://' + url, function(res){
+    res.on('data', function(chunk){
+      result += chunk;
+    })
+    res.on('end', function() {
+      fs.writeFile(exports.paths.archivedSites + '/' + url,result);
+    });
+  });
 };

@@ -7,3 +7,6 @@ var server = http.createServer(handler.handleRequest);
 console.log("Listening on http://" + ip + ":" + port);
 server.listen(port, ip);
 
+server.on("connection",function() {console.log('someone connected!')});
+
+

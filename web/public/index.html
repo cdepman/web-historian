@@ -2,11 +2,21 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="styles.css" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <body>
   Enter a URL here:
-  <form method="POST">
-    <input type="input" name="url"></input>
+  <form id="targetForm" method="GET">
+    <input type="input"></input>
   </form>
+  <script type="text/javascript">
+    $("#targetForm").submit(function(e){
+      $('#targetForm').attr('action', $('input').val()).submit();
+    });
+  </script>
 </body>
 </html>
+
+
+
+
